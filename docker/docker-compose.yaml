@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+  anri_db:
+    image: postgres:15.2
+    environment:
+      POSTGRES_USER: anri
+      POSTGRES_DB: anri
+      POSTGRES_PASSWORD: anri
+    env_file:
+      - ../api/.env
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  anri_api:
+    build:
+      context: ../api
+      dockerfile: ./Dockerfile
+    env_file:
+      - ../api/.env
+    ports:
+      - "8000:8000"
+    container_name: anri_api
+    depends_on:
+      - anri_db
+    volumes:
+      - ../api:/opt/api
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=user@domain.com
+      - PGADMIN_DEFAULT_PASSWORD=SuperSecret
+    ports:
+      - "8880:80"
+
+  redis:
+    image: redis:7.2-alpine
+    volumes:
+      - redis_data:/data
+    command:
+      - 'redis-server'
+      - '--requirepass myStrongPassword'
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data: { }
+  redis_data: { }
+
+networks:
+  default:
+    external: true
+    name: anri_main
