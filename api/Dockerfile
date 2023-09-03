@@ -19,9 +19,11 @@ WORKDIR /opt/api/
 COPY pyproject.toml .
 
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-root --no-cache --no-ansi --no-interaction --only main \
+    && poetry install --no-root --no-cache --no-ansi --no-interaction\
     && poetry cache clear pypi --all
 
 COPY . .
 
 RUN chmod a+x ./scripts/start-dev.sh
+
+ENTRYPOINT ./scripts/start-dev.sh

@@ -6,6 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 from src.config import settings
 from src.database import metadata, Base
+from src.auth.models import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -33,9 +34,7 @@ db_driver = settings.DATABASE_URL.scheme
 db_driver_parts = db_driver.split("+")
 if len(db_driver_parts) > 1:  # e.g. postgresql+asyncpg
     sync_scheme = db_driver_parts[0].strip()
-    DATABASE_URL = DATABASE_URL.replace(  # replace with sync driver
-        db_driver, sync_scheme
-    )
+    DATABASE_URL = DATABASE_URL.replace(db_driver, sync_scheme)  # replace with sync driver
 
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
 config.compare_type = True
@@ -80,9 +79,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

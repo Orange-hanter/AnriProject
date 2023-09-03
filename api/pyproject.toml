@@ -15,11 +15,16 @@ fastapi-users = {extras = ["sqlalchemy"], version = "^12.1.2"}
 sentry-sdk = {extras = ["fastapi"], version = "^1.30.0"}
 gunicorn = "^21.2.0"
 redis = "^5.0.0"
+psycopg2-binary = "^2.9.7"
 
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
+pre-commit = "^3.4.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120

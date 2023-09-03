@@ -17,9 +17,7 @@ from src.config import settings, app_configs
 @asynccontextmanager
 async def lifespan(_application: FastAPI) -> AsyncGenerator:
     # Startup
-    pool = aioredis.ConnectionPool.from_url(
-        str(settings.REDIS_URL), max_connections=10, decode_responses=True
-    )
+    pool = aioredis.ConnectionPool.from_url(str(settings.REDIS_URL), max_connections=10, decode_responses=True)
     redis.redis_client = aioredis.Redis(connection_pool=pool)
 
     yield
@@ -50,7 +48,8 @@ if settings.ENVIRONMENT.is_deployed:
 
 @app.get("/healthcheck", include_in_schema=False)
 async def healthcheck() -> dict[str, str]:
-    return {"status": settings.SECRET_AUTH}
+    return {"status": "ok"}
+
 
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
