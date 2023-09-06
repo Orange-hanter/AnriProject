@@ -3,7 +3,7 @@ from typing import Optional
 
 from redis.asyncio import Redis
 
-from .models import CustomModel
+from src.custom_model import CustomModel
 
 redis_client: Redis = None  # type: ignore
 

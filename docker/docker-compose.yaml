@@ -35,6 +35,8 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=SuperSecret
     ports:
       - "8880:80"
+    depends_on:
+      - anri_api
 
   redis:
     image: redis:7.2-alpine

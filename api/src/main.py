@@ -7,11 +7,10 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from src import redis_conf as redis
-
-from src.auth.schemas import UserRead, UserCreate
-
+from src.auth.schemas import UserRead, UserCreate, UserUpdate
 from src.auth.base_config import fastapi_users, auth_backend
 from src.config import settings, app_configs
+from src.products.router import router as router_products
 
 
 @asynccontextmanager
@@ -62,3 +61,11 @@ app.include_router(
     prefix="/auth",
     tags=["Auth"],
 )
+
+app.include_router(
+    fastapi_users.get_users_router(UserRead, UserUpdate),
+    prefix="/users",
+    tags=["users"],
+)
+
+app.include_router(router_products)
