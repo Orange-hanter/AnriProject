@@ -16,4 +16,7 @@ PORT=${PORT:-8000}
 
 # Start Uvicorn with live reload
 #exec uvicorn --reload --proxy-headers --host $HOST --port $PORT --log-config $LOG_CONFIG "$APP_MODULE"
+
+alembic upgrade head
+
 exec uvicorn --reload --proxy-headers --host $HOST --port $PORT "$APP_MODULE"
