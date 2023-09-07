@@ -1,7 +1,11 @@
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTableUUID
+from sqlalchemy import Column, String
 
-from src.database import Base, metadata
+from ..database import Base, metadata
 
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
-    pass
+    __tablename__ = 'users'
+
+    username = Column(String)
+    password = Column(String)
