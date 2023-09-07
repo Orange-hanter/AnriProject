@@ -5,8 +5,11 @@ from sqlalchemy import pool
 
 from alembic import context
 from src.config import settings
-from src.database import metadata, Base
-from src.auth.models import *
+from src.models.user import *
+from src.models.product import *
+from src.models.product_tag import *
+from src.models.tag import *
+from src.models.product_photo import ProductPhoto
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
