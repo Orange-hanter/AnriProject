@@ -1,12 +1,12 @@
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, Float
 
-from ..database import Base
-from . import core_model
+from src.database import Base
+from src.models import core_model
 
 
 class Contragent(Base, core_model.CoreModel):
-    __tablename__ = 'contragents'
+    __tablename__ = "contragents"
 
     company_name: Mapped[str] = mapped_column(String, nullable=False)
     state_cadastr_code: Mapped[str] = mapped_column(String, nullable=False)

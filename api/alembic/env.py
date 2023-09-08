@@ -5,6 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from src.config import settings
+from src.database import metadata, Base
 from src.models.user import *
 from src.models.product import *
 from src.models.product_tag import *
