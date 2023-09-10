@@ -3,10 +3,10 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKey, Column
 
 from src.database import Base
-from src.models import core_model
+from src.models.core_model import CoreModel
 
 
-class Employee(Base, core_model.CoreModel):
+class Employee(Base, CoreModel):
     __tablename__ = "employees"
 
     contragent_uuid = Column(postgresql.UUID(as_uuid=True), ForeignKey("contragents.uuid"))
