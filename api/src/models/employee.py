@@ -11,5 +11,5 @@ class Employee(Base, core_model.CoreModel):
 
     contragent_uuid = Column(postgresql.UUID(as_uuid=True), ForeignKey("contragents.uuid"))
     contragent = relationship("Contragent", back_populates="employees")
-    user_uuid = Column(postgresql.UUID(as_uuid=True), ForeignKey("users.uuid"))
+    user_uuid = Column(postgresql.UUID(as_uuid=True), ForeignKey("users.id"))
     user = relationship("User", back_populates="employees")

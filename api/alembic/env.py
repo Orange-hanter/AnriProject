@@ -10,6 +10,8 @@ from src.models.user import *
 from src.models.product import *
 from src.models.product_tag import *
 from src.models.tag import *
+from src.models.contragent import *
+from src.models.employee import *
 from src.models.product_photo import ProductPhoto
 
 # this is the Alembic Config object, which provides
