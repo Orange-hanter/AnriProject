@@ -1,0 +1,61 @@
+name: anri-api
+version: "3.9"
+x-base-django: &base-django
+  environment: &base-django-environment
+    ANRI_CELERY_BROKER_URL: redis://redis:6379/2
+    ANRI_DATABASE_URL: psql://anri:anri@postgres:5432/anri_db
+    ANRI_DEPENDENCIES_WAIT: "true"
+  build:
+    context: .
+    target: local
+    dockerfile: Dockerfile
+  volumes:
+    - .:/opt/api
+  networks:
+    - default
+    - global
+  depends_on:
+    - postgres
+    - redis
+services:
+  django:
+    <<: *base-django
+    environment:
+      <<: *base-django-environment
+      SYNAPSIS_DATABASE_MIGRATE: 'true'
+    ports:
+      - ${HOST_IP:-127.0.0.1}:${API_PORT:-8000}:8000
+    depends_on:
+      - postgres
+      - redis
+      - celery-worker
+      - celery-beat
+  celery-worker:
+    <<: *base-django
+    command: [ "celery", "-A", "anri", "worker", "--concurrency", "1", "--loglevel", "DEBUG" ]
+  celery-beat:
+    <<: *base-django
+    volumes:
+      - .:/opt/api
+    command: ["celery", "-A", "anri", "beat", "--schedule", "/tmp/celery-beat-schedule.db"]
+  postgres:
+    image: postgres:15.2
+    environment:
+      POSTGRES_USER: anri
+      POSTGRES_DB: anri_db
+      POSTGRES_PASSWORD: anri
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:7.0.10
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data: { }
+  redis_data: { }
+
+networks:
+  global:
+    name: anri_main
+    external: true
