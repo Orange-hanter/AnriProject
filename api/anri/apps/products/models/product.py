@@ -1,6 +1,7 @@
 from django.db import models
 
 from anri.apps.common.models import CoreModel
+from anri.apps.products.models.productPhoto import ProductPhoto
 
 
 class Product(CoreModel):
@@ -9,4 +10,5 @@ class Product(CoreModel):
     group = models.CharField(max_length=127)
     description = models.CharField(max_length=127)
     quantity_in_stock = models.IntegerField()
+    photoCode = models.ForeignKey(ProductPhoto, on_delete=models.DO_NOTHING)
     price = models.DecimalField(max_digits=5, decimal_places=2)
