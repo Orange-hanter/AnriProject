@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     "drf_yasg",
     # Internal apps
     "anri.apps.products",
+    "anri.apps.carts",
+    "anri.apps.orders",
+    "anri.apps.users",
 ]
 
 MIDDLEWARE = [
