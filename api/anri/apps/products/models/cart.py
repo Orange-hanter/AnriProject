@@ -4,4 +4,4 @@ from anri.apps.common.models import CoreModel
 
 
 class Cart(CoreModel):
-    user_id = models.OneToOneField("User", on_delete=models.CASCADE)
+    user = models.OneToOneField("User", on_delete=models.CASCADE)

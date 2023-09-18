@@ -5,5 +5,5 @@ from anri.apps.common.models import CoreModel
 
 
 class ProductTag(CoreModel):
-    product_id = models.ForeignKey("Product")
+    product = models.ForeignKey("Product")
     # tag_id = models.ForeignKey("Tag")

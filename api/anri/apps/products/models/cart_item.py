@@ -4,6 +4,6 @@ from anri.apps.common.models import CoreModel
 
 
 class CartItem(CoreModel):
-    cart_id = models.ForeignKey("Cart", on_delete=models.CASCADE)
-    product_id = models.ForeignKey("Product")
+    cart = models.ForeignKey("Cart", on_delete=models.CASCADE)
+    product = models.ForeignKey("Product")
     quantity = models.IntegerField()
