@@ -9,5 +9,5 @@ class Product(CoreModel):
     group = models.CharField(max_length=127)
     description = models.CharField(max_length=127)
     quantity_in_stock = models.IntegerField()
-    photoCode = models.ForeignKey("ProductPhoto", on_delete=models.DO_NOTHING)
+    photoCode = models.OneToOneField("ProductPhoto", on_delete=models.DO_NOTHING)
     price = models.DecimalField(max_digits=5, decimal_places=2)
