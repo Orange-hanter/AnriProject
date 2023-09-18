@@ -1,7 +1,7 @@
 from django.db import models
 
 from anri.apps.common.models import CoreModel
-from anri.apps.products.models.productPhoto import ProductPhoto
+from anri.apps.products.models.product_photo import ProductPhoto
 
 
 class Product(CoreModel):
