@@ -7,7 +7,7 @@ class Product(CoreModel):
     name = models.CharField(max_length=127)
     code = models.CharField(max_length=127)
     group = models.CharField(max_length=127)
-    description = models.CharField(max_length=127)
+    description = models.CharField(max_length=512)
     tags = models.ManyToManyField("products.Tag")
     image = models.ImageField("Image", upload_to="img")
     quantity_in_stock = models.IntegerField()
