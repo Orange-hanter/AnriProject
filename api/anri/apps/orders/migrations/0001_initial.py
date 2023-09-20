@@ -15,31 +15,30 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Contragent",
+            name="Order",
             fields=[
                 ("uuid", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ("created", models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="created")),
                 ("updated", models.DateTimeField(auto_now=True, verbose_name="updated")),
-                ("company_name", models.CharField(max_length=127)),
-                ("state_cadastr_address", models.CharField(max_length=127)),
-                ("legal_address", models.CharField(max_length=127)),
-                ("company_rating", models.DecimalField(decimal_places=2, max_digits=5)),
-                ("contact_name", models.CharField(max_length=127)),
-                ("contact_email", models.CharField(max_length=127)),
-                ("contact_phone", models.CharField(max_length=31)),
+                ("order_date", models.DateTimeField(auto_now_add=True)),
+                ("total_amount", models.DecimalField(decimal_places=2, max_digits=5)),
+                ("status", models.CharField(max_length=127)),
+                ("user", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name="Employee",
+            name="OrderItem",
             fields=[
                 ("uuid", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ("created", models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="created")),
                 ("updated", models.DateTimeField(auto_now=True, verbose_name="updated")),
-                ("contragent", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="users.contragent")),
-                ("user", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ("quantity", models.IntegerField()),
+                ("price_at_order_time", models.DecimalField(decimal_places=2, max_digits=5)),
+                ("subtotal", models.DecimalField(decimal_places=2, max_digits=5)),
+                ("order", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="orders.order")),
             ],
             options={
                 "abstract": False,
