@@ -16,6 +16,8 @@ django-filter = "^23.2"
 gunicorn = "^21.2.0"
 drf-yasg = "^1.21.7"
 pillow = "^10.0.1"
+djoser = "^2.2.0"
+djangorestframework-simplejwt = "^5.3.0"
 
 
 [tool.poetry.group.dev.dependencies]
