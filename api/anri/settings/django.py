@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "drf_yasg",
+    "djoser",
+    "rest_framework_simplejwt",
     # Internal apps
     "anri.apps.products",
 ]
