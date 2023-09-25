@@ -10,5 +10,5 @@ class Product(CoreModel):
     description = models.CharField(max_length=512)
     tags = models.ManyToManyField("products.Tag")
     image = models.ImageField("Image", upload_to="img")
-    quantity_in_stock = models.IntegerField()
+    quantity_in_stock = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)

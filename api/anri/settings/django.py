@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     # Internal apps
     "anri.apps.products",
+    "anri.apps.carts",
+    "anri.apps.orders",
+    "anri.apps.users",
 ]
 
 MIDDLEWARE = [
