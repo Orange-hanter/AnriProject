@@ -1,11 +1,11 @@
-import os
+from anri.enviroment import env
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASS")
+EMAIL_HOST_USER = env.str("ANRI_EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env.str("ANRI_EMAIL_HOST_PASSWORD")
 
 DJOSER = {
     "USER_ID_FIELD": "username",
@@ -14,7 +14,7 @@ DJOSER = {
     "SEND_CONFIRMATION_EMAIL": True,
     "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
     "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
-    "ACTIVATION_URL": "activate/{uid}/{token}",
+    "ACTIVATION_URL": "activation/{uid}/{token}",
     "SERIALIZERS": {
         "activation": "djoser.serializers.ActivationSerializer",
         "password_reset": "djoser.serializers.SendEmailResetSerializer",
@@ -32,8 +32,6 @@ DJOSER = {
         "user_delete": "djoser.serializers.UserDeleteSerializer",
         "user": "djoser.serializers.UserSerializer",
         "current_user": "djoser.serializers.UserSerializer",
-        "token": "djoser.serializers.TokenSerializer",
-        "token_create": "djoser.serializers.TokenCreateSerializer",
     },
     "EMAILS": {
         "activation": "djoser.email.ActivationEmail",
