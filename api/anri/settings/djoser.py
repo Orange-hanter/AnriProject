@@ -19,6 +19,7 @@ DJOSER = {
     "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
     "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
     "ACTIVATION_URL": "activation/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
     "SERIALIZERS": {
         "activation": "djoser.serializers.ActivationSerializer",
         "password_reset": "djoser.serializers.SendEmailResetSerializer",
