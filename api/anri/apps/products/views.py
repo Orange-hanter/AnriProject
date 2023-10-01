@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 
-from anri.apps.products.models import Product
-from anri.apps.products.serializer import ProductSerializer
+from anri.apps.products.models import Product, Tag
+from anri.apps.products.serializers import ProductSerializer, TagSerializer
 
 
 class ProductPagination(PageNumberPagination):
@@ -15,3 +15,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer

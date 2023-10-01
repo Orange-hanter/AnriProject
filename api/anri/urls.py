@@ -32,6 +32,10 @@ api_v1_urlpatterns = [
         f"{API_V1_PREFIX}/",
         include(("anri.apps.products.urls", "products"), namespace="api-v1-products"),
     ),
+    path(
+        f"{API_V1_PREFIX}/",
+        include(("anri.apps.carts.urls", "carts"), namespace="api-v1-carts"),
+    ),
     path(f"{API_V1_PREFIX}/auth", include("djoser.urls")),
     path(f"{API_V1_PREFIX}/auth", include("djoser.urls.jwt")),
 ]

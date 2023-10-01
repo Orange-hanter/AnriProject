@@ -12,3 +12,8 @@ class Product(CoreModel):
     image = models.ImageField("Image", upload_to="img")
     quantity_in_stock = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def delete(self):
+        product = Product.objects.get(pk=self.pk)
+        product.image.delete()
+        return super().delete()
