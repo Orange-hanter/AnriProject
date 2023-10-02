@@ -1,5 +1,4 @@
 from anri.enviroment import env
-from datetime import timedelta
 
 
 EMAIL_USE_TLS = True
@@ -35,9 +34,9 @@ DJOSER = {
         "user": "djoser.serializers.UserSerializer",
         "current_user": "djoser.serializers.UserSerializer",
     },
-    "EMAILS": {
-        "activation": "djoser.email.ActivationEmail",
-        "confirmation": "djoser.email.ConfirmationEmail",
+    "EMAIL": {
+        "activation": "anri.apps.users.email.ActivationEmail",
+        "confirmation": "anri.apps.users.email.ConfirmationEmail",
         "password_reset": "djoser.email.PasswordResetEmail",
         "password_changed_confirmation": "djoser.email.PasswordChangedConfirmationEmail",
         "username_changed_confirmation": "djoser.email.UsernameChangedConfirmationEmail",
