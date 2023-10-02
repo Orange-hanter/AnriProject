@@ -9,10 +9,13 @@ class CartItemSerializer(serializers.ModelSerializer):
         model = CartItem
         fields = (
             "uuid",
-            "user",
             "product",
             "quantity",
         )
+
+    def create(self, validated_data):
+        validated_data["user"] = self.context["request"].user
+        return super().create(validated_data)
 
 
 class CartSerializer(serializers.ModelSerializer):

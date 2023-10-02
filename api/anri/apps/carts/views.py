@@ -19,10 +19,6 @@ class CartViewSet(viewsets.ModelViewSet):
         response_data["total_cost"] = queryset.aggregate(total_cost=Sum("products_cost")).get("total_cost")
         return Response(response_data)
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-        return super().perform_create(serializer)
-
     def retrieve(self, request, *args, **kwargs):
         queryset = CartItem.objects.filter(user=request.user).annotate(
             products_cost=F("product__price") * F("quantity")
