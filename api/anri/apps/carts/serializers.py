@@ -14,6 +14,8 @@ class CartItemSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
+        if validated_data["quantity"] > validated_data["product"].quantity_in_stock:
+            validated_data["quantity"] = validated_data["product"].quantity_in_stock
         validated_data["user"] = self.context["request"].user
         return super().create(validated_data)
 
