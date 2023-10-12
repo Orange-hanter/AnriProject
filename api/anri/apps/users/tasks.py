@@ -1,9 +1,8 @@
+import pytz
+
 from celery import shared_task
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
-
-import pytz
-
 from anri.settings import CELERY_TIMEZONE
 
 
