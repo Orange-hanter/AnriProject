@@ -21,6 +21,9 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Check docker version
+      run: |
+        docker-compose --version
     - name: Build docker
       run: |
         cd api && docker-compose build
