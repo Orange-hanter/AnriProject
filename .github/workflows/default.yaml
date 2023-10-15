@@ -30,6 +30,7 @@ jobs:
         docker-compose --version
     - name: Build docker
       run: |
+        docker network create anri_main
         cd api && docker-compose build
     - name: Run Tests
       run: |
