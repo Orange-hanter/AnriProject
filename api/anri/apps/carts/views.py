@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.db.models import F, Sum
 
 from anri.apps.carts.models import CartItem
-from anri.apps.carts.serializers import CartItemSerializer, CartSerializer
+from anri.apps.carts.serializers import CartItemSerializer, CartSerializer, CartItemUpdateSerializer
 
 
 class CartViewSet(viewsets.ModelViewSet):
@@ -19,6 +19,8 @@ class CartViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list" or self.action == "retrieve":
             return CartSerializer
+        elif self.action == "update" or self.action == "partial_update":
+            return CartItemUpdateSerializer
         return CartItemSerializer
 
     def list(self, request, *args, **kwargs):

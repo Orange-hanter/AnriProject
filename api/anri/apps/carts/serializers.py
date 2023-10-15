@@ -20,6 +20,20 @@ class CartItemSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
+class CartItemUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = (
+            "uuid",
+            "quantity",
+        )
+
+    def update(self, instance, validated_data):
+        if validated_data["quantity"] > instance.product.quantity_in_stock:
+            validated_data["quantity"] = instance.product.quantity_in_stock
+        return super().update(instance, validated_data)
+
+
 class CartSerializer(serializers.ModelSerializer):
     products_cost = serializers.SerializerMethodField()
     product = ProductSerializer()
