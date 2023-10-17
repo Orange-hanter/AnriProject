@@ -33,7 +33,7 @@ def celery_conf_check(app_configs, **kwargs):
         "result_backend": "CELERY_RESULT_BACKEND",
         "timezone": "CELERY_TIMEZONE",
         "task_ignore_result": "CELERY_TASK_IGNORE_RESULT",
-        "beat_schedule": "CELERYBEAT_SCHEDULE",
+        "beat_schedule": "CELERY_BEAT_SCHEDULE",
     }
 
     errors = []
