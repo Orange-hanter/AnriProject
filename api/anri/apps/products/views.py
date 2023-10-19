@@ -1,10 +1,11 @@
+import django_filters.rest_framework
+
 from rest_framework import viewsets, filters
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 
 from anri.apps.products.models import Product
 from anri.apps.products.serializer import ProductSerializer
-from anri.apps.products.filters import ProductFilter
 
 
 class ProductPagination(PageNumberPagination):
@@ -17,9 +18,10 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.order_by("created")
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
+
+    filter_backends = (filters.SearchFilter, django_filters.rest_framework.DjangoFilterBackend)
     search_fields = ["name"]
-    filter_backends = (filters.SearchFilter,)
-    filterset_class = ProductFilter
+    filterset_fields = ["tags", "group"]
 
     def get_permissions(self):
         if self.action == "list":
