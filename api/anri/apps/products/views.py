@@ -1,6 +1,7 @@
-import django_filters.rest_framework
+from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import viewsets, filters
+from rest_framework import viewsets
+from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 
@@ -19,7 +20,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
 
-    filter_backends = (filters.SearchFilter, django_filters.rest_framework.DjangoFilterBackend)
+    filter_backends = (SearchFilter, DjangoFilterBackend)
     search_fields = ["name"]
     filterset_fields = ["tags", "group"]
 
