@@ -1,3 +1,28 @@
-from django.shortcuts import render
+from rest_framework import viewsets, mixins, status
+from rest_framework.response import Response
 
-# Create your views here.
+from anri.apps.orders.models import Order, OrderItem
+from anri.apps.carts.models import CartItem
+from anri.apps.orders.serializers import OrderItemSerializer
+from .choices import OrderStatus
+
+
+class OrderViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    queryset = Order.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        cart_items = CartItem.objects.filter(user=request.user).select_related("product")
+        total_amount = sum([cart_item.product.price * cart_item.quantity for cart_item in cart_items])
+        order = Order.objects.create(user=request.user, total_amount=total_amount, status=OrderStatus.PAYMENT_WAITING)
+        order_items = [
+            OrderItem.objects.create(
+                order=order,
+                product=cart_item.product,
+                quantity=cart_item.quantity,
+                price=cart_item.product.price,
+                subtotal=cart_item.product.price * cart_item.quantity,
+            )
+            for cart_item in cart_items
+        ]
+
+        return Response({"message": "ok"}, status=status.HTTP_201_CREATED)
