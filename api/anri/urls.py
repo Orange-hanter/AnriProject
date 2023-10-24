@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path, include, re_path
 
 
@@ -32,8 +33,16 @@ api_v1_urlpatterns = [
         f"{API_V1_PREFIX}/",
         include(("anri.apps.products.urls", "products"), namespace="api-v1-products"),
     ),
-    path(f"{API_V1_PREFIX}/auth", include("djoser.urls")),
-    path(f"{API_V1_PREFIX}/auth", include("djoser.urls.jwt")),
+    path(
+        f"{API_V1_PREFIX}/",
+        include(("anri.apps.carts.urls", "carts"), namespace="api-v1-carts"),
+    ),
+    path(
+        f"{API_V1_PREFIX}/",
+        include(("anri.apps.users.urls", "users"), namespace="api-v1-users"),
+    ),
+    path(f"{API_V1_PREFIX}/auth/", include("djoser.urls")),
+    path(f"{API_V1_PREFIX}/auth/", include("djoser.urls.jwt")),
 ]
 
 urlpatterns = admin_urlpatterns + api_v1_urlpatterns
@@ -74,3 +83,6 @@ if "SWAGGER" in settings.ANRI_FEATURES:
     ]
 
 urlpatterns += swagger_urlpatterns
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

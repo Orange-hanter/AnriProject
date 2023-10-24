@@ -22,7 +22,7 @@ services:
     <<: *base-django
     environment:
       <<: *base-django-environment
-      SYNAPSIS_DATABASE_MIGRATE: 'true'
+      ANRI_DATABASE_MIGRATE: 'true'
     ports:
       - ${HOST_IP:-127.0.0.1}:${API_PORT:-8000}:8000
     depends_on:
