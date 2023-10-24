@@ -6,7 +6,7 @@ from anri.apps.products.models import Product, Tag
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ("uuid", "name", "code", "group", "description", "quantity_in_stock", "price", "image", "tags")
+        fields = ("uuid", "name", "code", "group", "description", "price", "image", "tags")
 
 
 class TagSerializer(serializers.ModelSerializer):
