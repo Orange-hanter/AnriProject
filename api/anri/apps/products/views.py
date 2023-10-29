@@ -1,6 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
 
+
 from rest_framework import viewsets
+from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 
@@ -10,7 +12,6 @@ from anri.apps.products.serializers import ProductSerializer, TagSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.order_by("created")
     serializer_class = ProductSerializer
     pagination_class = CorePageNumberPagination
 
@@ -24,6 +25,15 @@ class ProductViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [IsAdminUser]
         return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        return Product.objects.order_by("created")
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        response_data = {"result": serializer.data}
+        return Response(response_data)
 
 
 class TagViewSet(viewsets.ModelViewSet):
