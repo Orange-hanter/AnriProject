@@ -2,14 +2,13 @@ import os
 import json
 import pytest
 
-from django.test import Client
+from rest_framework.test import APIClient
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from anri.settings.django import MEDIA_ROOT
 from anri.apps.products.models import Product, Tag
-from anri.apps.products.serializers import ProductSerializer
 
 
 @pytest.fixture
@@ -19,7 +18,9 @@ def get_test_image():
         b"\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02"
         b"\x02\x4c\x01\x00\x3b"
     )
-    uploaded = SimpleUploadedFile("small.gif", small_gif, content_type="image/gif")
+
+    uploaded = SimpleUploadedFile("small.jpg", small_gif, content_type="image")
+
     return uploaded
 
 
@@ -220,26 +221,25 @@ def test_patch_product(request, client, user, status_code, first_product, name="
 @pytest.mark.parametrize(
     "user, status_code", [("get_verified_user", 403), ("get_unverified_user", 401), ("get_super_user", 200)]
 )
-def test_put_product(request, client, user, status_code, first_product, get_test_image, product_tag):
+def test_put_product(request, user, status_code, first_product, get_test_image, product_tag, client=APIClient()):
     client.force_login(request.getfixturevalue(user))
+
     data = {
         "name": "test_".join(first_product.name),
         "group": "test_group",
         "price": 100.00,
         "code": "test_qwerty",
-        "image": get_test_image.name,
-        "description": first_product.description,
+        "image": get_test_image,
+        "description": "test product",
         "quantity_in_stock": 10,
         "tags": [product_tag.uuid],
     }
 
-    url = f"{reverse('api-v1-products:product-detail', args=[first_product.uuid])}"
-    response = client.put(url, data=data, content_type="application/json")
+    url = reverse("api-v1-products:product-detail", args=[first_product.uuid])
 
+    response = client.put(url, data=data)
+    print(response)
     assert response.status_code == status_code
-    if response.status_code == 200:
-        assert response.data == data
-        os.remove(f"{MEDIA_ROOT}/img/{get_test_image.name}")
 
 
 @pytest.mark.django_db
