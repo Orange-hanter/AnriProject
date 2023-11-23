@@ -11,6 +11,7 @@ from anri.settings.django import MEDIA_ROOT
 from anri.apps.products.models import Product, Tag
 
 
+# Возвращает изображение, готовое для использования в продукте
 @pytest.fixture
 def get_test_image():
     small_gif = (
@@ -24,6 +25,7 @@ def get_test_image():
     return uploaded
 
 
+# Возвращает тестового пользователя, который верифицирован(через почту)
 @pytest.fixture
 def get_verified_user():
     return User.objects.create_user(
@@ -31,6 +33,7 @@ def get_verified_user():
     )
 
 
+# Возвращает тестового пользователя, который не верифицирован
 @pytest.fixture
 def get_unverified_user():
     return User.objects.create_user(
@@ -38,6 +41,7 @@ def get_unverified_user():
     )
 
 
+# Возвращает тестового админ-пользователя со всеми правами
 @pytest.fixture
 def get_super_user():
     return User.objects.create_superuser(
@@ -45,21 +49,25 @@ def get_super_user():
     )
 
 
+# Возвращает тестовый тег для продукта
 @pytest.fixture
 def product_tag():
     return Tag.objects.create(name="product_tag")
 
 
+# Возвращает тестовый продукт
 @pytest.fixture
 def first_product(product_tag):
     return Product.objects.create(name="first_product", quantity_in_stock=10, price=250)
 
 
+# Возвращает тестовый продукт
 @pytest.fixture
 def second_product(product_tag):
     return Product.objects.create(name="second_product", quantity_in_stock=10, price=250)
 
 
+# Возвращает тестовый продукт который имеет теги
 @pytest.fixture
 def test_group_tag_product(product_tag):
     obj = Product.objects.create(name="test_product", group="test", quantity_in_stock=10, price=250)
@@ -67,6 +75,7 @@ def test_group_tag_product(product_tag):
     return obj
 
 
+# Возвращает пару параметров, где 1 параметр - то, что ищем, второй - ожидаемый результат(кол-во найденных продуктов)
 @pytest.fixture(
     params=[
         ("test_nothing", 0),
@@ -77,6 +86,7 @@ def test_ready_search(request):
     return request.param
 
 
+# Возвращает пару параметров, где 1 параметр - то, что мы ищем фильтруя по группам, второй - ожидаемый результат(кол-во найденных продуктов)
 @pytest.fixture(
     params=[
         ("test_nothing", 0),
@@ -87,6 +97,8 @@ def test_group_filter(request):
     return request.param
 
 
+# Вовращает кортеж параметров, где 1 параметр - то, что мы ищем фильтруя по тегам, второй - ожидаемый результат(кол-во найденных продуктов),
+#  третий - код возврата(в реализации так, что в случае отсутствия код возврата - 400)
 @pytest.fixture(
     params=[
         ("test", False, 400),
@@ -97,6 +109,8 @@ def test_tag_filter(request):
     return request.param
 
 
+# Тестовый сценарий, который проверяет get-запрос по продуктам(т.е вернуть просто список продуктов)
+# Идет проверка по 3 видам пользователей, код возврата обязан быть одинаковым(логика такова, что все должны иметь возможность просмотреть продукты)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "user, status_code", [("get_verified_user", 200), ("get_unverified_user", 200), ("get_super_user", 200)]
@@ -126,6 +140,8 @@ def test_product_list(request, client, user, status_code, first_product):
     assert response.status_code == status_code
 
 
+# Тестовый сценарий, который проверяет post-запрос по продуктам(т.е возможность создать продукт)
+# Создать может только администратор(201 код возврата), остальные должны быть либо 403 - запрещен доступ, или 401 - не верифицирован
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "user, status_code", [("get_verified_user", 403), ("get_unverified_user", 401), ("get_super_user", 201)]
@@ -153,6 +169,9 @@ def test_create_product(request, client, user, status_code, product_tag, get_tes
         os.remove(f"{MEDIA_ROOT}/img/{get_test_image.name}")
 
 
+# Тестовый сценарий, в котором проверяется возможность поиска по продуктам(выполнять такой запрос могут все)
+# Однако, результат будет отличаться в зависимости от того, существует ли данный продукт, т.е код возврата всегда 200
+# Здесь 6 тест-кейсов, 3 пользователя и 2 случая, позитивный и негативный(существует продукт или нет)
 @pytest.mark.django_db
 @pytest.mark.parametrize("user", ["get_verified_user", "get_unverified_user", "get_super_user"])
 def test_search_item(request, client, user, test_ready_search, test_group_tag_product):
@@ -168,6 +187,9 @@ def test_search_item(request, client, user, test_ready_search, test_group_tag_pr
     assert response.status_code == 200
 
 
+# Тестовый сценарий, в котором проверяется возможность фильтрации по группам(выполнять такой запрос могут все)
+# Однако, результат будет отличаться в зависимости от того, существует ли данный продукт, т.е код возврата всегда 200
+# Здесь 6 тест-кейсов, 3 пользователя и 2 случая, позитивный и негативный(существует продукт или нет)
 @pytest.mark.django_db
 @pytest.mark.parametrize("user", ["get_verified_user", "get_unverified_user", "get_super_user"])
 def test_filter_by_group(request, client, user, test_group_filter, test_group_tag_product):
@@ -185,6 +207,9 @@ def test_filter_by_group(request, client, user, test_group_filter, test_group_ta
     assert response.status_code == 200
 
 
+# Тестовый сценарий в котором проверяется возможность фильтрации по тегам(выполнять такой запрос могут все)
+# Однако, результат будет отличаться в зависимости от того, существует ли данный продукт, при этом код возврата отличается
+# Здесь 6 тест-кейсов, 3 пользователя и 2 случая, позитивный и негативный(существует продукт или нет)
 @pytest.mark.django_db
 @pytest.mark.parametrize("user", ["get_verified_user", "get_unverified_user", "get_super_user"])
 def test_filter_by_tag(request, client, user, test_tag_filter, test_group_tag_product, product_tag):
@@ -202,6 +227,8 @@ def test_filter_by_tag(request, client, user, test_tag_filter, test_group_tag_pr
     assert response.status_code == status_code
 
 
+# Тестовый сценарий в котором проверяется возможность выполнять patch-запрос, то есть изменять какое-либо значение в уже существующем продукте
+# Выполнять данный запрос может только администратор(код возврата 200), остальные же либо 403 - запрещен доступ для верифицированного пользователя, либо 401(non authenticated) не верифицирован
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "user, status_code", [("get_verified_user", 403), ("get_unverified_user", 401), ("get_super_user", 200)]
@@ -217,6 +244,8 @@ def test_patch_product(request, client, user, status_code, first_product, name="
         assert response.data["name"] == data["name"]
 
 
+# Тестовый сценарий в котором проверяется возможность выполнять put-запрос, то есть изменить продукт полностью
+# Выполнять данный запрос может только администратор(код возврата 200), остальные же либо 403 - запрещен доступ для верифицированного пользователя, либо 401(non authenticated) не верифицирован
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "user, status_code", [("get_verified_user", 403), ("get_unverified_user", 401), ("get_super_user", 200)]
@@ -242,6 +271,8 @@ def test_put_product(request, user, status_code, first_product, get_test_image, 
     assert response.status_code == status_code
 
 
+# Тестовый сценарий в котором проверяется возможность выполнять delete-запрос, то есть удалить продукт
+# Выполнять данный запрос может только администратор(код возврата 200), остальные же либо 403 - запрещен доступ для верифицированного пользователя, либо 401(non authenticated) не верифицирован
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "user, status_code", [("get_verified_user", 403), ("get_unverified_user", 401), ("get_super_user", 204)]
