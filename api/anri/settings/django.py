@@ -44,9 +44,9 @@ INSTALLED_APPS = [
     "drf_yasg",
     "djoser",
     "rest_framework_simplejwt",
+    "phonenumber_field",
     # Internal apps
     "anri.apps.products",
-    "anri.apps.carts",
     "anri.apps.orders",
     "anri.apps.users",
 ]
