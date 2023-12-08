@@ -1,5 +1,6 @@
 from django.db.models import Q
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from anri.apps.orders.choices import OrderStatus
 from anri.apps.orders.models import OrderItem, Order
@@ -10,6 +11,16 @@ class BaseOrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = ("uuid", "product", "quantity")
+
+    def save(self, **kwargs):
+        if self.validated_data["quantity"] > self.validated_data["product"].quantity_in_stock:
+            raise ValidationError(
+                {
+                    "quantity": "Quantity must be less than quantity_in_stock.",
+                    "quantity_in_stock": f"{self.validated_data['product'].quantity_in_stock}",
+                }
+            )
+        return super().save(**kwargs)
 
 
 class OrderItemCreateSerializer(BaseOrderItemSerializer):
