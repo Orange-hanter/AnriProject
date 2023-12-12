@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 
 from anri.apps.products.models import Product, Tag
 from anri.apps.common.pagination import CorePageNumberPagination
-from anri.apps.products.serializers import ProductSerializer, TagSerializer
+from anri.apps.products.serializers import ProductSerializer, TagSerializer, AdminActionProductSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -34,6 +34,12 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         response_data = {"result": serializer.data}
         return Response(response_data)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ProductSerializer
+        else:
+            return AdminActionProductSerializer
 
 
 class TagViewSet(viewsets.ModelViewSet):
