@@ -5,7 +5,14 @@ from rest_framework.response import Response
 
 from anri.apps.orders.choices import OrderStatus
 from anri.apps.orders.models import OrderItem, Order
-from anri.apps.orders.serializers import OrderItemListSerializer, OrderItemCreateSerializer, OrderItemUpdateSerializer
+from anri.apps.orders.serializers import (
+    OrderItemListSerializer,
+    OrderItemCreateSerializer,
+    OrderItemUpdateSerializer,
+    OrderListSerializer,
+    BaseOrderSerializer,
+    OrderCreateSerializer,
+)
 
 
 class CartViewSet(
@@ -26,9 +33,12 @@ class CartViewSet(
         return OrderItemListSerializer
 
     def get_queryset(self):
-        order, _ = Order.objects.filter(Q(user=self.request.user) & Q(status=OrderStatus.FORMATION)).get_or_create(
-            user=self.request.user, amount=0
-        )
+        amount = (
+            Order.objects.filter(Q(user=self.request.user) & Q(status=OrderStatus.FORMATION))
+            .aggregate(amount=Sum("amount"))
+            .get("amount")
+        ) or 0
+        order, _ = Order.objects.get_or_create(user=self.request.user, amount=amount)
         return OrderItem.objects.filter(order=order).annotate(products_price=F("quantity") * F("product__price"))
 
     def list(self, request, *args, **kwargs):
@@ -42,3 +52,22 @@ class CartViewSet(
             "amount": queryset.aggregate(amount=Sum("products_price")).get("amount"),
         }
         return Response(response_data)
+
+
+class OrderViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = Order.objects.all()
+    serializer_class = OrderListSerializer
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return OrderCreateSerializer
+        return OrderListSerializer
+
+    def get_queryset(self):
+        return Order.objects.filter(Q(user=self.request.user) & ~Q(status=OrderStatus.FORMATION))
