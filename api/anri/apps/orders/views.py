@@ -37,7 +37,7 @@ class CartViewSet(
             Order.objects.filter(Q(user=self.request.user) & Q(status=OrderStatus.FORMATION))
             .aggregate(amount=Sum("amount"))
             .get("amount")
-        )
+        ) or 0
         order, _ = Order.objects.get_or_create(user=self.request.user, amount=amount)
         return OrderItem.objects.filter(order=order).annotate(products_price=F("quantity") * F("product__price"))
 

@@ -29,7 +29,12 @@ class OrderItemCreateSerializer(BaseOrderItemSerializer):
     uuid = serializers.ReadOnlyField()
 
     def create(self, validated_data):
-        order = Order.objects.filter(Q(user=self.context["request"].user) & Q(status=OrderStatus.FORMATION)).get()
+        amount = (
+            Order.objects.filter(Q(user=self.context["request"].user) & Q(status=OrderStatus.FORMATION))
+            .aggregate(amount=Sum("amount"))
+            .get("amount")
+        ) or 0
+        order, _ = Order.objects.get_or_create(user=self.context["request"].user, amount=amount)
         validated_data["order"] = order
         return super().create(validated_data)
 
@@ -38,7 +43,7 @@ class OrderItemUpdateSerializer(BaseOrderItemSerializer):
     uuid = serializers.ReadOnlyField()
 
     class Meta(BaseOrderItemSerializer.Meta):
-        fields = ("uuid", "quantity")
+        fields = ("uuid", "product", "quantity")
 
 
 class OrderItemListSerializer(BaseOrderItemSerializer):
