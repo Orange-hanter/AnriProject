@@ -33,9 +33,12 @@ class CartViewSet(
         return OrderItemListSerializer
 
     def get_queryset(self):
-        order, _ = Order.objects.filter(Q(user=self.request.user) & Q(status=OrderStatus.FORMATION)).get_or_create(
-            user=self.request.user, amount=0
+        amount = (
+            Order.objects.filter(Q(user=self.request.user) & Q(status=OrderStatus.FORMATION))
+            .aggregate(amount=Sum("amount"))
+            .get("amount")
         )
+        order, _ = Order.objects.get_or_create(user=self.request.user, amount=amount)
         return OrderItem.objects.filter(order=order).annotate(products_price=F("quantity") * F("product__price"))
 
     def list(self, request, *args, **kwargs):
