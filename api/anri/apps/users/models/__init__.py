@@ -1,2 +1,1 @@
-from .employee import Employee
-from .contragent import Contragent
+from .user_info import UserInfo

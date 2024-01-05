@@ -5,3 +5,6 @@ from anri.apps.common.models.core_model import CoreModel
 
 class Tag(CoreModel):
     name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name

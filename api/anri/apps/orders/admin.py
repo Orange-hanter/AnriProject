@@ -1,20 +1,13 @@
 from django.contrib import admin
-from anri.apps.orders.models import Order, OrderItem
+
+from anri.apps.orders.models import Order, DeliveryAddress
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("user", "order_date", "total_amount", "status")
-    list_filter = (
-        "order_date",
-        "user",
-    )
+    list_display = ("user", "amount", "address", "paid", "status", "payment_method")
 
 
-@admin.register(OrderItem)
-class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ("order", "product", "quantity", "price_at_order_time", "subtotal")
-    list_filter = (
-        "order",
-        "product",
-    )
+@admin.register(DeliveryAddress)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ("address",)

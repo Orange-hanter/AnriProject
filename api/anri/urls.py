@@ -35,7 +35,7 @@ api_v1_urlpatterns = [
     ),
     path(
         f"{API_V1_PREFIX}/",
-        include(("anri.apps.carts.urls", "carts"), namespace="api-v1-carts"),
+        include(("anri.apps.orders.urls", "carts"), namespace="api-v1-carts"),
     ),
     path(
         f"{API_V1_PREFIX}/",
