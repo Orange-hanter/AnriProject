@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db.models import Q, F, Sum
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -7,6 +9,7 @@ from anri.apps.orders.models import OrderItem, Order, DeliveryAddress
 from anri.apps.products.serializers import ProductSerializer
 from anri.apps.users.models import UserInfo
 from anri.apps.users.serializers import UserInfoSerializer
+from .tasks import switch_order_status_to_formation
 
 
 class BaseOrderItemSerializer(serializers.ModelSerializer):
@@ -109,9 +112,7 @@ class OrderCreateSerializer(BaseOrderSerializer):
         instance.amount = amount
         instance.address = address
         instance.payment_method = self.validated_data["payment_method"]
-        if self.validated_data["payment_method"] == PaymentMethod.ONLINE:
-            instance.status = OrderStatus.PAYMENT_WAITING
-        else:
-            instance.status = OrderStatus.DISPATCH_WAITING
+        instance.status = OrderStatus.PAYMENT_WAITING
         instance.save()
+        switch_order_status_to_formation.apply_async(args=[instance.uuid], countdown=timedelta(minutes=15).seconds)
         return instance
