@@ -76,7 +76,7 @@ if "SWAGGER" in settings.ANRI_FEATURES:
             name="v1-schema-swagger-ui",
         ),
         path(
-            f"{API_V1_PREFIX}/",
+            f"{API_V1_PREFIX}/redoc/",
             api_v1_schema_view.with_ui("redoc", cache_timeout=0),
             name="v1-schema-redoc",
         ),
