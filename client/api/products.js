@@ -3,8 +3,7 @@ import { Model } from './index'
 
 class Products extends Model {
   async get() {
-    const path = '/products'
-    const response = await API.get(path)
+    const response = await API.get("/products")
     return response.data.result
   }
 }
