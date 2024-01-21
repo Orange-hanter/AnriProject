@@ -1,27 +1,24 @@
 <template>
   <div :class="$style.container">
-    <div v-for="item in products" :key="item.id" :class="$style.content">
-      <div :class="$style.image">
-        <img :src="item.image" alt="" />
-      </div>
-      <div :class="$style.name">
-        {{ item.name }}
-      </div>
-      <div :class="$style.price">{{ item.price }} р.</div>
-    </div>
+    <Product
+      v-for="item in products"
+      :key="item.id"
+      :item="item"
+      :class="$style.content"
+    />
   </div>
 </template>
 
 <script>
 export default {
   async mounted() {
-    await this.$store.dispatch("products/getProducts")
+    await this.$store.dispatch('products/getProducts')
   },
   computed: {
     products() {
       return this.$store.state.products.products
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" module>
@@ -38,41 +35,6 @@ export default {
   }
   @media (max-width: 840px) {
     grid-template-columns: 1fr 1fr;
-  }
-  .content {
-    margin: 0 0 4rem 0;
-    @media (max-width: 840px) {
-      margin: 0 0 2rem 0;
-    }
-    .image {
-      max-width: 18rem;
-      max-height: 18rem;
-      margin: 0 0 1rem 0;
-      @media (max-width: 840px) {
-        max-width: 25rem;
-        max-height: 25rem;
-      }
-      @media (max-width: 480px) {
-        max-width: 25rem;
-        max-height: 25rem;
-      }
-      & img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-    .name {
-      margin: 0 0 1rem 0;
-      @media (max-width: 480px) {
-        font-size: 0.8rem;
-        margin:0 0 0.3rem 0;
-      }
-    }
-    .price {
-      @media (max-width: 480px) {
-        font-size: 0.8rem;
-      }
-    }
   }
 }
 </style>
