@@ -2,7 +2,6 @@ from djoser import email
 from djoser import utils
 from djoser.conf import settings
 from django.contrib.auth.tokens import default_token_generator
-from .models import Employee
 
 
 class ActivationEmail(email.ActivationEmail):
