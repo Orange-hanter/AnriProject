@@ -3,7 +3,7 @@
     <div :class="$style.back">
       <nuxt-link to="/" :class="$style.catalog">← все товары</nuxt-link>
       <nuxt-link to="/" :class="$style.cross">
-        <img src="../../assets/images/cross.jpg" alt="" />
+        <img src="/images/cross.jpg" alt="" />
       </nuxt-link>
     </div>
     <div :class="$style.content">
@@ -45,23 +45,23 @@ export default {
 
 <style lang="scss" module>
 .container {
-  padding: 2rem 1rem 0 1rem;
+  padding: 10rem 2rem;
   max-width: 85rem;
   margin: 0 auto;
-  @media (max-width: 500px) {
-    padding: 1rem 0 0 0;
+  @media (max-width: 830px) {
+    padding: 5rem 1rem;
   }
   .back {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0 0 5rem 0;
+    margin: 0 0 1rem 0;
     @media (max-width: 980px) {
       margin: 0 0 2rem 0;
     }
     .catalog {
       text-decoration: none;
-      color: #000;
+      color: $black;
     }
     .cross {
       cursor: pointer;
@@ -74,7 +74,6 @@ export default {
     }
   }
   .content {
-    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
     display: grid;
     grid-template-columns: 1fr 1fr;
     max-width: 75rem;
@@ -102,7 +101,7 @@ export default {
         margin: 0 0 1rem 0;
       }
       .code {
-        color: grey;
+        color: $grey;
         margin: 0 0 2rem 0;
       }
       .price {
@@ -112,8 +111,8 @@ export default {
       }
       .button {
         cursor: pointer;
-        color: #fff;
-        background-color: #000;
+        color: $white;
+        background-color: $black;
         border: none;
         padding: 1rem 2rem;
         border-radius: 0.3rem;

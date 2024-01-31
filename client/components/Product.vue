@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     open() {
-    this.$store.commit("products/setProduct", this.item)
+      this.$store.commit('products/setProduct', this.item)
       this.$router.push({
         name: 'product',
         params: { product: this.item.uuid },
@@ -27,6 +27,7 @@ export default {
 </script>
 <style lang="scss" module>
 .content {
+  cursor: pointer;
   margin: 0 0 4rem 0;
   @media (max-width: 840px) {
     margin: 0 0 2rem 0;
