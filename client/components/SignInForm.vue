@@ -3,7 +3,7 @@
     <Form>
       <template #form>
         <div :class="$style.content">
-          <form action="">
+          <form @submit.prevent="authUser">
             <input
               :class="$style.input"
               type="text"
@@ -32,6 +32,15 @@ export default {
       username: '',
       password: '',
     }
+  },
+  methods: {
+    async authUser() {
+      const user = {
+        username: this.username,
+        password: this.password,
+      }
+      await this.$store.dispatch('auth/auth', user)
+    },
   },
   components: {
     Form,

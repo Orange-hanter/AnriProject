@@ -33,16 +33,16 @@
 export default {
   computed: {
     isOpen() {
-      return this.$store.state.header.isOpen
+      return this.$store.state.popups.isOpen
     },
   },
   methods: {
     openBurger() {
-      this.$store.commit('header/changeIsOpen')
+      this.$store.commit('popups/changeIsOpen')
       document.body.classList.toggle('lock')
     },
     openLogin() {
-      this.$store.commit('header/changeIsAuth')
+      this.$store.commit('popups/changeIsAuth')
       document.body.classList.add('lock')
     },
   },

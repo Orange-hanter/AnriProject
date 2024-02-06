@@ -3,7 +3,7 @@
     <Form>
       <template #form>
         <div :class="$style.content">
-          <form @submit.prevent="loginUser">
+          <form @submit.prevent="regUser">
             <input
               :class="$style.input"
               type="text"
@@ -44,13 +44,13 @@ export default {
     Form,
   },
   methods: {
-    async loginUser() {
+    async regUser() {
       const user = {
         email: this.email,
         username: this.username,
         password: this.password,
       }
-      await this.$store.dispatch('header/login', user)
+      await this.$store.dispatch('auth/registration', user)
     },
   },
 }

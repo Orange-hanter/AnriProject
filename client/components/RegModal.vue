@@ -11,14 +11,14 @@
         </div>
       </template>
     </Modal>
-    <LoginForm v-if="isLogin" />
+    <RegistrationFormVue v-if="isLogin" />
     <SignInForm v-if="isAuth" />
   </div>
 </template>
 
 <script>
 import Modal from './layouts/Modal.vue'
-import LoginForm from './LoginForm.vue'
+import RegistrationFormVue from './RegistrationForm.vue'
 import SignInForm from './SignInForm.vue'
 export default {
   data() {
@@ -29,7 +29,7 @@ export default {
   },
   components: {
     Modal,
-    LoginForm,
+    RegistrationFormVue,
     SignInForm,
   },
   methods: {

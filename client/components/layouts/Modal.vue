@@ -16,8 +16,8 @@
 export default {
   methods: {
     close() {
-      this.$store.commit('header/changeIsAuth')
-      if (!this.$store.state.header.isOpen) {
+      this.$store.commit('popups/changeIsAuth')
+      if (!this.$store.state.popups.isOpen) {
         document.body.classList.remove('lock')
       }
     },

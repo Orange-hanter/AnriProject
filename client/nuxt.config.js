@@ -14,6 +14,8 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
+  loading: { color: 'transparent' },
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [{ src: '~/assets/styles/reset.scss', lang: 'sass' }],
   styleResources: {
