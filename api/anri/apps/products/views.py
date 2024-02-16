@@ -20,7 +20,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     filterset_fields = ["tags", "group"]
 
     def get_permissions(self):
-        if self.action == "list":
+        if self.action == "list" or self.action == "retrieve":
             permission_classes = [IsAuthenticatedOrReadOnly]
         else:
             permission_classes = [IsAdminUser]
