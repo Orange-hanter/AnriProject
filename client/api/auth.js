@@ -33,5 +33,13 @@ class Auth extends Model {
     })
     return response.data
   }
+
+  async activation(uid, token) {
+    const response = await API.post('/auth/users/activation/', {
+      uid,
+      token,
+    })
+    return response
+  }
 }
 export default new Auth('/auth')

@@ -12,13 +12,21 @@
           <span></span>
         </div>
         <div :class="[$style.list, isOpen ? $style.open : '']">
-          <nuxt-link to="/" :class="[$style.link, $style.effect]"
-            >Каталог</nuxt-link
+          <nuxt-link to="/" :class="[$style.link, $style.effect]">
+            <span @click="closeBurger">Каталог</span>
+          </nuxt-link>
+          <a :class="[$style.link, $style.effect]">
+            <span @click="closeBurger">О нас</span>
+          </a>
+          <a :class="[$style.link, $style.effect]"
+            ><span @click="closeBurger">Доставка</span></a
           >
-          <a :class="[$style.link, $style.effect]">О нас</a>
-          <a :class="[$style.link, $style.effect]">Доставка</a>
-          <a :class="[$style.link, $style.effect]">Контакты</a>
-          <a :class="[$style.link, $style.effect]">+123 678 901 23</a>
+          <a :class="[$style.link, $style.effect]"
+            ><span @click="closeBurger">Контакты</span></a
+          >
+          <a :class="[$style.link, $style.effect]"
+            ><span>+123 678 901 23</span></a
+          >
           <a :class="[$style.link, $style.button]" @click="openLogin">войти</a>
           <a :class="$style.link">
             <img src="~/assets/images/login.svg" alt="" />
@@ -44,6 +52,10 @@ export default {
     openLogin() {
       this.$store.commit('popups/changeIsAuth')
       document.body.classList.add('lock')
+    },
+    closeBurger() {
+      this.$store.commit('popups/changeIsOpen')
+      document.body.classList.remove('lock')
     },
   },
 }

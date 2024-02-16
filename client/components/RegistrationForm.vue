@@ -1,56 +1,55 @@
 <template>
-  <div>
-    <Form>
-      <template #form>
-        <div :class="$style.content">
-          <form @submit.prevent="regUser">
-            <input
-              :class="$style.input"
-              type="text"
-              placeholder="email"
-              v-model="email"
-            />
-            <input
-              :class="$style.input"
-              type="text"
-              placeholder="логин"
-              v-model="username"
-            />
-            <input
-              :class="$style.input"
-              type="password"
-              placeholder="пароль"
-              v-model="password"
-            />
-            <button :class="$style.button">зарегистрироваться</button>
-          </form>
-        </div>
-      </template>
-    </Form>
+  <div :class="$style.content">
+    <form @submit.prevent="regUser" v-if="!isButtonCliked">
+      <input
+        :class="$style.input"
+        type="text"
+        placeholder="email"
+        v-model="email"
+      />
+      <input
+        :class="$style.input"
+        type="text"
+        placeholder="логин"
+        v-model="username"
+      />
+      <input
+        :class="$style.input"
+        type="password"
+        placeholder="пароль"
+        v-model="password"
+      />
+      <button :class="$style.button">зарегистрироваться</button>
+    </form>
+    <div :class="$style.message" v-else>
+      Вы почти завершили процесс регистрации! Вам на почту будет оптравлено
+      сообщение для верефикации, после её подтверждения Вы будете успешно
+      зарегестрированы
+    </div>
   </div>
 </template>
 
 <script>
-import Form from './layouts/Form.vue'
 export default {
   data() {
     return {
       email: '',
       username: '',
       password: '',
+      isButtonCliked: false,
     }
-  },
-  components: {
-    Form,
   },
   methods: {
     async regUser() {
-      const user = {
-        email: this.email,
-        username: this.username,
-        password: this.password,
+      if (this.email !== '' && this.username !== '' && this.password !== '') {
+        const user = {
+          email: this.email,
+          username: this.username,
+          password: this.password,
+        }
+        await this.$store.dispatch('auth/registration', user)
+        this.isButtonCliked = true
       }
-      await this.$store.dispatch('auth/registration', user)
     },
   },
 }
@@ -58,7 +57,6 @@ export default {
 
 <style lang="scss" module>
 .content {
-  padding: 4rem;
   .input {
     display: block;
 

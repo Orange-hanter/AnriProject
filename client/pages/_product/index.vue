@@ -30,6 +30,9 @@ export default {
         'products/getProduct',
         this.$route.params.product
       )
+      if (!('uuid' in this.product)) {
+        this.$router.push('/error')
+      }
     }
   },
   computed: {

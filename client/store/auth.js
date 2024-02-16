@@ -49,6 +49,13 @@ export const actions = {
   async refreshTokenTimeout({ dispatch }) {
     setTimeout(() => dispatch('refresh'), 0.25 * 60 * 1000)
   },
+
+  async activation(context, { uid, token }) {
+    const value = await Auth.activation(uid, token)
+    if (value.status >= 400) {
+      return value.data.detail
+    } else return ''
+  },
 }
 
 export const mutations = {
