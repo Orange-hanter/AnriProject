@@ -3,7 +3,7 @@
     <div :class="$style.back">
       <nuxt-link to="/" :class="$style.catalog">← все товары</nuxt-link>
       <nuxt-link to="/" :class="$style.cross">
-        <img src="/images/cross.jpg" alt="" />
+        <img src="/images/cross.svg" alt="" />
       </nuxt-link>
     </div>
     <div :class="$style.content">
@@ -14,7 +14,9 @@
         <div :class="$style.name">{{ product.name }}</div>
         <div :class="$style.code">Артикул: {{ product.code }}</div>
         <div :class="$style.price">{{ product.price }} р.</div>
-        <button :class="$style.button">Добавить в корзину</button>
+        <button :class="$style.button" @click="addToCart">
+          Добавить в корзину
+        </button>
         <div :class="$style.description">{{ product.description }}</div>
         <div>{{ product.uuid }}</div>
       </div>
@@ -42,6 +44,16 @@ export default {
   },
   beforeDestroy() {
     this.$store.commit('products/setProduct', {})
+  },
+
+  methods: {
+    async addToCart() {
+      const value = {
+        product: this.product,
+        quantity: this.product.quantity_in_stock,
+      }
+      await this.$store.dispatch('cart/products', value)
+    },
   },
 }
 </script>

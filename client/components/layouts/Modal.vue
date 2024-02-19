@@ -3,7 +3,7 @@
     <div :class="$style.overlay"></div>
     <div :class="$style.content">
       <div :class="$style.close" @click="close">
-        <img src="/images/cross.jpg" alt="" />
+        <img src="/images/cross.svg" alt="" />
       </div>
       <div :class="$style.body">
         <slot name="body"></slot>
