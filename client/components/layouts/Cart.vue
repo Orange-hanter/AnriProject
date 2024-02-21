@@ -17,21 +17,12 @@
         </div>
         <div :class="$style.body">
           <div :class="$style.title">Ваш заказ:</div>
-          <div :class="$style.items">
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcddcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcddcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcdcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcddcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcddcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcddcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcddcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcddcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcddcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcddcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcddcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcddcdcdcdcdcdcdcdccddccdcdcddcdcdcd
-            dcdcdcdcdcdcdcdccddccdcdcddcdcdcddcdcdcdcdcdcdcdccddccdcdcddcdcdcd
+          <div
+            :class="$style.items"
+            v-for="item in products"
+            :key="item.product"
+          >
+            <div>dddddd</div>
           </div>
           <div :class="$style.totalSum">Сумма:</div>
           <button :class="$style.button">Checkout</button>
@@ -47,6 +38,11 @@ export default {
     return {
       isOpen: false,
     }
+  },
+  computed: {
+    products() {
+      return this.$store.state.cart.products
+    },
   },
   methods: {
     openCart() {

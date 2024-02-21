@@ -13,12 +13,14 @@
       <div :class="$style.info">
         <div :class="$style.name">{{ product.name }}</div>
         <div :class="$style.code">Артикул: {{ product.code }}</div>
+        <div :class="$style.code">
+          количество на складе: {{ product.quantity_in_stock }}
+        </div>
         <div :class="$style.price">{{ product.price }} р.</div>
         <button :class="$style.button" @click="addToCart">
           Добавить в корзину
         </button>
         <div :class="$style.description">{{ product.description }}</div>
-        <div>{{ product.uuid }}</div>
       </div>
     </div>
   </div>
@@ -27,14 +29,12 @@
 <script>
 export default {
   async mounted() {
+    await this.$store.dispatch(
+      'products/getProduct',
+      this.$route.params.product
+    )
     if (!('uuid' in this.product)) {
-      await this.$store.dispatch(
-        'products/getProduct',
-        this.$route.params.product
-      )
-      if (!('uuid' in this.product)) {
-        this.$router.push('/error')
-      }
+      this.$router.push('/error')
     }
   },
   computed: {
@@ -49,7 +49,7 @@ export default {
   methods: {
     async addToCart() {
       const value = {
-        product: this.product,
+        product: this.product.uuid,
         quantity: this.product.quantity_in_stock,
       }
       await this.$store.dispatch('cart/products', value)

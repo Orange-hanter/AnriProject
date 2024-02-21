@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.popup">
-    <div :class="$style.overlay"></div>
+    <div :class="$style.overlay" @click="close"></div>
     <div :class="$style.content">
       <div :class="$style.close" @click="close">
         <img src="/images/cross.svg" alt="" />
@@ -34,6 +34,7 @@ export default {
   height: 100vh;
   z-index: 10;
   .overlay {
+    cursor: pointer;
     position: absolute;
     top: 0;
     left: 0;

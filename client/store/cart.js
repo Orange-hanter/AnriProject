@@ -12,6 +12,6 @@ export const actions = {
 
 export const mutations = {
   setProducts(state, value) {
-    state.products = value
+    state.products.push(value)
   },
 }

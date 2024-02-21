@@ -7,7 +7,6 @@ class Cart extends Model {
       product,
       quantity,
     })
-
     return response.data
   }
 }
