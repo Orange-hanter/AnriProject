@@ -17,8 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path, include, re_path
-
+from django.urls import path, include
 
 API_PREFIX = "api"
 API_V1_PREFIX = f"{API_PREFIX}/v1"
@@ -48,41 +47,16 @@ api_v1_urlpatterns = [
 urlpatterns = admin_urlpatterns + api_v1_urlpatterns
 
 if "SWAGGER" in settings.ANRI_FEATURES:
-    from rest_framework import permissions
-
-    from drf_yasg import openapi
-    from drf_yasg.views import get_schema_view
-
-    api_v1_schema_view = get_schema_view(
-        openapi.Info(
-            title="anri",
-            default_version="v1",
-            description="Anri API v1 description",
-        ),
-        public=True,
-        permission_classes=(permissions.AllowAny,),
-        patterns=api_v1_urlpatterns,
-    )
+    from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
     swagger_urlpatterns = [
-        re_path(
-            f"{API_V1_PREFIX}/" + r"swagger(?P<format>\.json|\.yaml)$",
-            api_v1_schema_view.without_ui(cache_timeout=0),
-            name="v1-schema-json",
-        ),
-        path(
-            f"{API_V1_PREFIX}/swagger/",
-            api_v1_schema_view.with_ui("swagger", cache_timeout=0),
-            name="v1-schema-swagger-ui",
-        ),
-        path(
-            f"{API_V1_PREFIX}/redoc/",
-            api_v1_schema_view.with_ui("redoc", cache_timeout=0),
-            name="v1-schema-redoc",
-        ),
+        path(f"{API_V1_PREFIX}/schema/", SpectacularAPIView.as_view(), name="schema"),
+        path(f"{API_V1_PREFIX}/swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+        path(f"{API_V1_PREFIX}/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     ]
 
 urlpatterns += swagger_urlpatterns
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
