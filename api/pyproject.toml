@@ -20,6 +20,8 @@ djoser = "^2.2.0"
 djangorestframework-simplejwt = "^5.3.0"
 django-phonenumber-field = {extras = ["phonenumbers"], version = "^7.2.0"}
 django-cors-headers = "^4.3.1"
+drf-spectacular = "^0.27.1"
+drf-standardized-errors = {extras = ["openapi"], version = "^0.12.6"}
 
 
 [tool.poetry.group.dev.dependencies]
@@ -28,6 +30,7 @@ black = "^23.9.1"
 pytest = "^7.4.2"
 pytest-django = "^4.5.2"
 coverage = "^7.3.2"
+ruff = "^0.2.2"
 
 [build-system]
 requires = ["poetry-core"]
@@ -35,3 +38,62 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 120
+target-version = ["py311"]
+
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.env
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | node_modules
+)/
+'''
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+line-length = 120
+
+# Allow unused variables when underscore-prefixed.
+lint.dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+target-version = "py311"
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "F403"]
+"admin.py" = ["F401"]
+"conftest*" = ["F403"]
+"test_*.py" = ["S", "F811", "F401"]
+"tests.py" = ["S"]
+"*_test.py" = ["S"]
+"tasks.py" = ["F841"]
