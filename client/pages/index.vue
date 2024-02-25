@@ -1,12 +1,13 @@
 <template>
-  <ProductList />
+  <div>
+    <ProductList />
+  </div>
 </template>
 
 <script>
-import ProductList from '~/components/ProductList.vue';
-
+import ProductList from '~/components/ProductList.vue'
 export default {
-    name: 'IndexPage',
-    components: { ProductList }
+  name: 'IndexPage',
+  components: { ProductList },
 }
 </script>
