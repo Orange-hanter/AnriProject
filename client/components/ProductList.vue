@@ -23,6 +23,7 @@ export default {
 </script>
 <style lang="scss" module>
 .container {
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
   max-width: 70rem;
   margin: 0 auto;
   display: grid;
@@ -31,6 +32,7 @@ export default {
   gap: 1.5rem;
   padding: 10rem 1rem 0 1rem;
   @media (max-width: 1020px) {
+    gap: 1rem;
     grid-template-columns: 1fr 1fr 1fr;
   }
   @media (max-width: 840px) {
