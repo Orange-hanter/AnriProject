@@ -63,7 +63,7 @@ export const actions = {
     localStorage.removeItem('refreshToken')
     commit('deleteToken')
   },
-
+  
   async activation(context, { uid, token }) {
     const value = await Auth.activation(uid, token)
     if (value.status >= 400) {
