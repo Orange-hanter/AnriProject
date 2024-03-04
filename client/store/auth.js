@@ -2,13 +2,22 @@ import Auth from '~/api/auth'
 export const state = () => ({
   user: {},
   token: null,
+  tokenCreateTime: null,
+  tokenLifeTime: 30,
 })
+
+export const getters = {
+  getTokenLifeTime(state) {
+    return state.tokenLifeTime
+  },
+}
 
 export const actions = {
   async initToken({ state, dispatch, commit }) {
     commit('initToken')
     if (state.token && state.token !== 'undefined') {
       dispatch('refresh')
+      dispatch('verify')
     }
   },
 
@@ -19,24 +28,29 @@ export const actions = {
 
   async auth({ commit, dispatch }, { username, password }) {
     const value = await Auth.auth({ username, password })
+
+    commit('setTokenCreateTime', new Date())
+
     localStorage.setItem('accessToken', value.access)
     localStorage.setItem('refreshToken', value.refresh)
     commit('setToken', value.access)
     dispatch('refreshTokenTimeout')
-    dispatch('verifyTokenTimeout')
   },
 
   async refresh({ commit, dispatch }) {
     const refresh = localStorage.getItem('refreshToken')
     const value = await Auth.refresh(refresh)
+
     if (!value.access) {
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
+      localStorage.removeItem('time')
       commit('deleteToken')
       location.reload()
       return
     }
-    commit('setToken', value)
+
+    commit('setToken', value.access)
     localStorage.setItem('accessToken', value.access)
     dispatch('refreshTokenTimeout')
   },
@@ -47,20 +61,17 @@ export const actions = {
     if (value.status !== 200) {
       dispatch('refresh')
     }
-    dispatch('verifyTokenTimeout')
   },
 
   async refreshTokenTimeout({ dispatch }) {
-    setTimeout(() => dispatch('refresh'), 0.3 * 60 * 1000)
-  },
-
-  async verifyTokenTimeout({ dispatch }) {
-    setTimeout(() => dispatch('verify'), 0.1 * 60 * 1000)
+    setTimeout(() => dispatch('refresh'), 30 * 60 * 1000)
+    dispatch('verify')
   },
 
   async deleteToken({ commit }) {
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
+    localStorage.removeItem('time')
     commit('deleteToken')
   },
 
@@ -84,5 +95,9 @@ export const mutations = {
   },
   deleteToken(state) {
     state.token = null
+  },
+  setTokenCreateTime(state, value) {
+    state.tokenCreateTime = value.getHours() * 60 + value.getMinutes()
+    localStorage.setItem('time', state.tokenCreateTime)
   },
 }
