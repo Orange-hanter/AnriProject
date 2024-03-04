@@ -222,7 +222,7 @@ def test_filter_by_tag(request, client, user, test_tag_filter, test_group_tag_pr
     if result:
         assert response.data["result"][0]["name"] == test_group_tag_product.name
     else:
-        assert response.data["tags"] == [f"“{product_tag.uuid}{addition_to_tag}” is not a valid UUID."]
+        assert response.data["errors"][0]["detail"] == f"“{product_tag.uuid}{addition_to_tag}” is not a valid UUID."
 
     assert response.status_code == status_code
 

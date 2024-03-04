@@ -12,3 +12,10 @@ repos:
         name: API black
         language: system
         entry: bash -c 'cd api && docker compose run --rm --no-TTY --no-deps --entrypoint "black --check ." django'
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.1
+    hooks:
+    -    id: ruff
+         name: API ruff
+         language: system
+         entry: bash -c 'cd api && docker compose run --rm --no-TTY --no-deps --entrypoint "ruff check ." django'
