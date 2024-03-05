@@ -63,8 +63,8 @@ export const actions = {
     }
   },
 
-  async refreshTokenTimeout({ dispatch }) {
-    setTimeout(() => dispatch('refresh'), 30 * 60 * 1000)
+  async refreshTokenTimeout({ dispatch, state }) {
+    setTimeout(() => dispatch('refresh'), state.tokenLifeTime * 60 * 1000)
     dispatch('verify')
   },
 
