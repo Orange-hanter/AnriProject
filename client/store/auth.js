@@ -2,13 +2,22 @@ import Auth from '~/api/auth'
 export const state = () => ({
   user: {},
   token: null,
+  tokenCreateTime: null,
+  tokenLifeTime: 30,
 })
+
+export const getters = {
+  getTokenLifeTime(state) {
+    return state.tokenLifeTime
+  },
+}
 
 export const actions = {
   async initToken({ state, dispatch, commit }) {
     commit('initToken')
     if (state.token && state.token !== 'undefined') {
       dispatch('refresh')
+      dispatch('verify')
     }
   },
 
@@ -19,37 +28,53 @@ export const actions = {
 
   async auth({ commit, dispatch }, { username, password }) {
     const value = await Auth.auth({ username, password })
-    commit('setToken', value.access)
+
+    commit('setTokenCreateTime', new Date())
+
     localStorage.setItem('accessToken', value.access)
     localStorage.setItem('refreshToken', value.refresh)
+    commit('setToken', value.access)
     dispatch('refreshTokenTimeout')
   },
 
   async refresh({ commit, dispatch }) {
-    const access = localStorage.getItem('accessToken')
-    const data = await Auth.verify(access)
-    commit('setToken', data)
-
     const refresh = localStorage.getItem('refreshToken')
     const value = await Auth.refresh(refresh)
+
+    if (!value.access) {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
+      localStorage.removeItem('time')
+      commit('deleteToken')
+      location.reload()
+      return
+    }
+
     commit('setToken', value.access)
     localStorage.setItem('accessToken', value.access)
-    localStorage.setItem('refreshToken', value.refresh)
     dispatch('refreshTokenTimeout')
   },
 
-  async verify({ commit }) {
-    const access = localStorage.getItem('accessToken')
-    const value = await Auth.verify(access)
-    commit('setToken', value)
-    // localStorage.setItem('refreshToken', value.refresh)
-    //dispatch('refreshTokenTimeout')
+  async verify({ dispatch }) {
+    const refresh = localStorage.getItem('refreshToken')
+    const value = await Auth.verify(refresh)
+    if (value.status !== 200) {
+      dispatch('refresh')
+    }
   },
 
-  async refreshTokenTimeout({ dispatch }) {
-    setTimeout(() => dispatch('refresh'), 0.25 * 60 * 1000)
+  async refreshTokenTimeout({ dispatch, state }) {
+    setTimeout(() => dispatch('refresh'), state.tokenLifeTime * 60 * 1000)
+    dispatch('verify')
   },
 
+  async deleteToken({ commit }) {
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('time')
+    commit('deleteToken')
+  },
+  
   async activation(context, { uid, token }) {
     const value = await Auth.activation(uid, token)
     if (value.status >= 400) {
@@ -65,8 +90,14 @@ export const mutations = {
   setToken(state, value) {
     state.token = value
   },
-
   initToken(state) {
     state.token = localStorage.getItem('refreshToken') || null
+  },
+  deleteToken(state) {
+    state.token = null
+  },
+  setTokenCreateTime(state, value) {
+    state.tokenCreateTime = value.getHours() * 60 + value.getMinutes()
+    localStorage.setItem('time', state.tokenCreateTime)
   },
 }
