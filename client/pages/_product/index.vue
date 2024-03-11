@@ -52,7 +52,8 @@ export default {
         product: this.product.uuid,
         quantity: this.product.quantity_in_stock,
       }
-      await this.$store.dispatch('cart/products', value)
+      await this.$store.dispatch('cart/setProducts', value)
+      await this.$store.dispatch('cart/getProducts')
     },
   },
 }
