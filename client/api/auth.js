@@ -31,7 +31,7 @@ class Auth extends Model {
     const response = await API.post('/auth/jwt/verify/', {
       token,
     })
-    return response.data
+    return response
   }
 
   async activation(uid, token) {
