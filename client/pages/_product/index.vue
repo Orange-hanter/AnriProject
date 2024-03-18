@@ -50,7 +50,7 @@ export default {
     async addToCart() {
       const value = {
         product: this.product.uuid,
-        quantity: this.product.quantity_in_stock,
+        quantity: 1,
       }
       await this.$store.dispatch('cart/setProducts', value)
       await this.$store.dispatch('cart/getProducts')

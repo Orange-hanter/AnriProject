@@ -1,12 +1,8 @@
 <template>
   <div :class="$style.container">
-    <div
-      :class="$style.icon"
-      @click="openCart"
-      v-if="$store.state.cart.products.length !== 0"
-    >
+    <div :class="$style.icon" @click="openCart" v-if="products.length !== 0">
       <img src="/images/cart.svg" alt="" />
-      <span :class="$style.count">{{ $store.state.cart.products.length }}</span>
+      <span :class="$style.count">{{ products.length }}</span>
     </div>
 
     <div :class="$style.popup" v-if="isOpen">
@@ -15,18 +11,31 @@
         <div :class="$style.close" @click="isOpen = false">
           <img src="/images/cross.svg" alt="" />
         </div>
-        <div :class="$style.body">
+        <div :class="$style.body" v-if="products.length !== 0">
           <div :class="$style.title">Ваш заказ:</div>
-          <div
-            :class="$style.items"
-            v-for="item in products"
-            :key="item.product"
-          >
-            <div>dddddd</div>
+          <div :class="$style.items">
+            <div :class="$style.item" v-for="item in products" :key="item.uuid">
+              <img :src="item.product.image" alt="" :class="$style.image" />
+              <div>
+                {{ item.product.name }}
+                {{ item.product.code }}
+              </div>
+              <div>{{ item.product.price }}р.</div>
+              <div :class="$style.delete" @click="deleteProduct(item.uuid)">
+                <img src="/images/cross.svg" alt="" />
+              </div>
+              <div>
+                <span @click="quantity(item.product.uuid, item.quantity + 1)"
+                  >+</span
+                >
+                <span>-</span>
+              </div>
+            </div>
           </div>
-          <div :class="$style.totalSum">Сумма:</div>
+          <div :class="$style.totalSum">Сумма: {{ totalPrice }}р.</div>
           <button :class="$style.button">Checkout</button>
         </div>
+        <div :class="$style.body" v-else>корзина пуста</div>
       </div>
     </div>
   </div>
@@ -41,12 +50,21 @@ export default {
   },
   computed: {
     products() {
-      return this.$store.state.cart.products
+      return this.$store.state.cart.cart.products
+    },
+    totalPrice() {
+      return this.$store.state.cart.cart.totalPrice
     },
   },
   methods: {
     openCart() {
       this.isOpen = true
+    },
+    async deleteProduct(uuid) {
+      await this.$store.dispatch('cart/deleteProduct', uuid)
+    },
+    async quantity(product, quantity) {
+      await this.$store.dispatch('cart/changeQuantity', product, quantity)
     },
   },
 }
@@ -134,6 +152,29 @@ export default {
           border-bottom: 0.0625rem solid $black;
           padding: 1rem 0;
           margin: 0 0 2rem 0;
+          .item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0 0 1rem 0;
+            .image {
+              max-width: 4rem;
+              max-height: 4rem;
+              border-radius: 0.5rem;
+            }
+            .delete {
+              max-width: 1rem;
+              max-height: 1rem;
+              border: 0.0625rem solid $black;
+              border-radius: 50%;
+              padding: 0.1rem;
+              cursor: pointer;
+              & img {
+                width: 100%;
+                height: 100%;
+              }
+            }
+          }
         }
         .totalSum {
           margin: 0 0 2rem 0;

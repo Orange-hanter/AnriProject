@@ -92,7 +92,6 @@ export const mutations = {
     state.token = value
   },
   initToken(state) {
-    logTokenValues('initToken')
     state.token = localStorage.getItem('accessToken') || null
   },
   deleteToken(state) {
