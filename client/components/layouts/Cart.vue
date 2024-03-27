@@ -67,14 +67,14 @@ export default {
       await this.$store.dispatch('cart/deleteProduct', uuid)
     },
 
-    async quantity(id, product, quantity) {
+    async quantity(cartId, productId, quantity) {
       if (quantity === 0) {
-        this.deleteProduct(id)
+        this.deleteProduct(cartId)
       } else {
         const info = {
-          id,
-          product,
-          quantity,
+          id: cartId,
+          product: productId,
+          quantity: quantity,
         }
         await this.$store.dispatch('cart/changeQuantity', info)
       }
