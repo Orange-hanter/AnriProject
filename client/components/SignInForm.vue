@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.content">
-    <form @submit.prevent="authUser">
+    <form @submit.prevent="authUser" v-if="!isLogin">
       <input
         :class="$style.input"
         type="text"
@@ -15,6 +15,7 @@
       />
       <button :class="$style.button">Войти</button>
     </form>
+    <div :class="$style.message" v-else>Вы успешно авторизованы</div>
   </div>
 </template>
 
@@ -24,6 +25,7 @@ export default {
     return {
       username: '',
       password: '',
+      isLogin: false,
     }
   },
   methods: {
@@ -33,6 +35,8 @@ export default {
         password: this.password,
       }
       await this.$store.dispatch('auth/auth', user)
+      await this.$store.dispatch('cart/getProducts')
+      this.isLogin = true
     },
   },
 }

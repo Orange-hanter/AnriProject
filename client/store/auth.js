@@ -91,7 +91,14 @@ export const mutations = {
     state.token = value
   },
   initToken(state) {
-    state.token = localStorage.getItem('refreshToken') || null
+    state.token = localStorage.getItem('accessToken') || null
+  },
+  deleteToken(state) {
+    state.token = null
+  },
+  setTokenCreateTime(state, value) {
+    state.tokenCreateTime = value.getHours() * 60 + value.getMinutes()
+    localStorage.setItem('time', state.tokenCreateTime)
   },
   deleteToken(state) {
     state.token = null

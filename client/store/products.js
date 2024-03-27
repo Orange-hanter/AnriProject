@@ -27,7 +27,6 @@ export const mutations = {
 }
 
 export const actions = {
-  
   checkTime({ dispatch, getters }) {
     if (localStorage.getItem('time')) {
       if (getTime() - localStorage.getItem('time') > getters.getTokenLifeTime) {

@@ -8,7 +8,7 @@ export default ({ app, store }) => {
   app.$axios.onRequest((config) => {
     const newConfig = { ...config }
     if (store && store.state.auth.token) {
-      newConfig.headers.Authorization = `Bearer ${store.state.auth.token}`
+      newConfig.headers.Authorization = `anri ${store.state.auth.token}`
     }
 
     return newConfig

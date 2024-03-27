@@ -18,7 +18,7 @@
         </div>
         <div :class="$style.price">{{ product.price }} р.</div>
         <button :class="$style.button" @click="addToCart">
-          Добавить в корзину
+          {{ btnText }}
         </button>
         <div :class="$style.description">{{ product.description }}</div>
       </div>
@@ -28,6 +28,11 @@
 
 <script>
 export default {
+  data() {
+    return {
+      btnText: 'добавить в корзину',
+    }
+  },
   async mounted() {
     await this.$store.dispatch(
       'products/getProduct',
@@ -36,10 +41,21 @@ export default {
     if (!('uuid' in this.product)) {
       this.$router.push('/error')
     }
+
+    const productIndex = this.$store.state.cart.cart.products.findIndex(
+      (i) => i.product.uuid === this.product.uuid
+    )
+    const item = this.$store.state.cart.cart.products[productIndex]
+    if (item) {
+      this.btnText = 'перейти в корзину'
+    }
   },
   computed: {
     product() {
       return this.$store.state.products.product
+    },
+    cart() {
+      return this.$store.state.cart.cart
     },
   },
   beforeDestroy() {
@@ -48,11 +64,21 @@ export default {
 
   methods: {
     async addToCart() {
-      const value = {
-        product: this.product.uuid,
-        quantity: this.product.quantity_in_stock,
+      const productIndex = this.$store.state.cart.cart.products.findIndex(
+        (i) => i.product.uuid === this.product.uuid
+      )
+      const item = this.$store.state.cart.cart.products[productIndex]
+      if (item) {
+        this.$store.commit('cart/setIsOpen', true)
+      } else {
+        this.btnText = 'перейти в корзину'
+        const value = {
+          product: this.product.uuid,
+          quantity: 1,
+        }
+        await this.$store.dispatch('cart/setProducts', value)
+        await this.$store.dispatch('cart/getProducts')
       }
-      await this.$store.dispatch('cart/products', value)
     },
   },
 }
