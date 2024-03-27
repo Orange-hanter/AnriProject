@@ -20,9 +20,9 @@ class Cart extends Model {
     return response
   }
 
-  async changeQuantity(product, quantity) {
-    const response = await API.patch(`/carts/${product}/`, quantity)
-    return response
+  async patch({ id, product, quantity }) {
+    const response = await API.patch(`/carts/${id}/`, { product, quantity })
+    return response.data
   }
 }
 export default new Cart('/carts')

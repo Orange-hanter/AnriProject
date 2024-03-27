@@ -1,14 +1,9 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.icon" @click="openCart" v-if="products.length !== 0">
-      <img src="/images/cart.svg" alt="" />
-      <span :class="$style.count">{{ products.length }}</span>
-    </div>
-
-    <div :class="$style.popup" v-if="isOpen">
-      <div :class="$style.overlay" @click="isOpen = false"></div>
+    <div :class="$style.popup">
+      <div :class="$style.overlay" @click="close"></div>
       <div :class="$style.content">
-        <div :class="$style.close" @click="isOpen = false">
+        <div :class="$style.close" @click="close">
           <img src="/images/cross.svg" alt="" />
         </div>
         <div :class="$style.body" v-if="products.length !== 0">
@@ -21,14 +16,23 @@
                 {{ item.product.code }}
               </div>
               <div>{{ item.product.price }}р.</div>
-              <div :class="$style.delete" @click="deleteProduct(item.uuid)">
-                <img src="/images/cross.svg" alt="" />
-              </div>
+              <div>{{ item.quantity }}</div>
               <div>
-                <span @click="quantity(item.product.uuid, item.quantity + 1)"
+                <span
+                  @click="
+                    quantity(item.uuid, item.product.uuid, item.quantity + 1)
+                  "
                   >+</span
                 >
-                <span>-</span>
+                <span
+                  @click="
+                    quantity(item.uuid, item.product.uuid, item.quantity - 1)
+                  "
+                  >-</span
+                >
+              </div>
+              <div :class="$style.delete" @click="deleteProduct(item.uuid)">
+                <img src="/images/cross.svg" alt="" />
               </div>
             </div>
           </div>
@@ -43,10 +47,8 @@
 
 <script>
 export default {
-  data() {
-    return {
-      isOpen: false,
-    }
+  async mounted() {
+    await this.$store.dispatch('cart/getProducts')
   },
   computed: {
     products() {
@@ -57,14 +59,25 @@ export default {
     },
   },
   methods: {
-    openCart() {
-      this.isOpen = true
+    close() {
+      this.$store.commit('cart/setIsOpen', false)
     },
+
     async deleteProduct(uuid) {
       await this.$store.dispatch('cart/deleteProduct', uuid)
     },
-    async quantity(product, quantity) {
-      await this.$store.dispatch('cart/changeQuantity', product, quantity)
+
+    async quantity(id, product, quantity) {
+      if (quantity === 0) {
+        this.deleteProduct(id)
+      } else {
+        const info = {
+          id,
+          product,
+          quantity,
+        }
+        await this.$store.dispatch('cart/changeQuantity', info)
+      }
     },
   },
 }
@@ -72,36 +85,6 @@ export default {
 
 <style lang="scss" module>
 .container {
-  .icon {
-    cursor: pointer;
-    position: fixed;
-    top: 7rem;
-    right: 1.5rem;
-    background-color: $cartIconBg;
-    border-radius: 50%;
-    padding: 1.5rem;
-    transition: transform 0.2s ease-in-out;
-    &:hover {
-      transform: scale(1.1);
-    }
-    & img {
-      width: 2rem;
-      height: 2rem;
-    }
-    .count {
-      background-color: red;
-      border-radius: 1.875rem;
-      bottom: -3px;
-      color: #fff;
-      font-family: Arial, Helvetica, sans-serif;
-      height: 1.875rem;
-      line-height: 1.875rem;
-      position: absolute;
-      right: -3px;
-      text-align: center;
-      width: 1.875rem;
-    }
-  }
   .popup {
     position: fixed;
     top: 0;
