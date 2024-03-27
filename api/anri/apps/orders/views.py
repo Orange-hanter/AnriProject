@@ -10,7 +10,6 @@ from anri.apps.orders.serializers import (
     OrderItemCreateSerializer,
     OrderItemUpdateSerializer,
     OrderListSerializer,
-    BaseOrderSerializer,
     OrderCreateSerializer,
 )
 
