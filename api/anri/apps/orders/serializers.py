@@ -4,7 +4,7 @@ from django.db.models import Q, F, Sum
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from anri.apps.orders.choices import OrderStatus, PaymentMethod
+from anri.apps.orders.choices import OrderStatus
 from anri.apps.orders.models import OrderItem, Order, DeliveryAddress
 from anri.apps.products.serializers import ProductSerializer
 from anri.apps.users.models import UserInfo

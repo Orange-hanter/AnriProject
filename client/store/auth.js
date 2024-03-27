@@ -34,7 +34,6 @@ export const actions = {
     localStorage.setItem('accessToken', value.access)
     localStorage.setItem('refreshToken', value.refresh)
     commit('setToken', value.access)
-
     dispatch('refreshTokenTimeout')
   },
 
@@ -75,7 +74,7 @@ export const actions = {
     localStorage.removeItem('time')
     commit('deleteToken')
   },
-
+  
   async activation(context, { uid, token }) {
     const value = await Auth.activation(uid, token)
     if (value.status >= 400) {
@@ -93,6 +92,13 @@ export const mutations = {
   },
   initToken(state) {
     state.token = localStorage.getItem('accessToken') || null
+  },
+  deleteToken(state) {
+    state.token = null
+  },
+  setTokenCreateTime(state, value) {
+    state.tokenCreateTime = value.getHours() * 60 + value.getMinutes()
+    localStorage.setItem('time', state.tokenCreateTime)
   },
   deleteToken(state) {
     state.token = null
